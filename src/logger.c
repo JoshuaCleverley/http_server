@@ -1,5 +1,3 @@
-#include <time.h>
-
 #include "logger.h"
 
 void timestamp(char* buffer) {
@@ -12,17 +10,34 @@ void timestamp(char* buffer) {
   strftime(buffer, sizeof(buffer), "%H:%M", time_info);
 }
 
-void log_with_type(const char* type, const char* message) {
-  char buffer[100];
-  timestamp(buffer);
-  printf("[%s] %s: %s\n", buffer, type, message);
+void log_with_type(const char* type, const char* message, va_list args) {
+  time_t now;     
+  time(&now);     
+  char * date = ctime(&now);   
+  date[strlen(date) - 1] = '\0';  
+  printf("[%s] [%s] ", date, type);  
+  vprintf(message, args);     
+  printf("\n");
+  //char buffer[100];
+  //timestamp(buffer);
+  //printf("[%s] %s: %s\n", buffer, type, message);
 }
 
-void log_info(const char* message) {
-  log_with_type("INFO", message);
+void log_info(const char* message, ...) {
+  va_list args;   
+  va_start(args, message); 
+  
+  log_with_type("INFO", message, args);
+
+  va_end(args);
 }
 
-void log_error(const char* message) {
-  log_with_type("ERROR", message); 
+void log_error(const char* message, ...) {
+  va_list args;
+  va_start(args, message);
+
+  log_with_type("ERROR", message, args); 
+  
+  va_end(args);
 }
 
