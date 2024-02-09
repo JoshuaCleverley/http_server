@@ -8,8 +8,9 @@
 #include <string.h>
 #include <stdbool.h>
 #include <errno.h>
+#include <unistd.h>
 
-#define MYPORT 3500
+#define PORT 8000
 
 char *reply = 
 "HTTP/1.1 200 OK\n"
@@ -38,21 +39,21 @@ int main()
   log_info("Socket created");
     
   my_addr.sin_family = AF_INET;
-  my_addr.sin_port = htons(MYPORT);
-  my_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+  my_addr.sin_port = htons(PORT);
+  my_addr.sin_addr.s_addr = INADDR_ANY;
   my_addr.sin_zero[8]='\0';
 
   bind(sockfd, (struct sockaddr*)&my_addr, sizeof(struct sockaddr));
-  log_info("Socket bound to port 3500");
+  log_info("Socket bound to port 8000");
 
   listen(sockfd,5);
   log_info("Listening for connections");
     
   struct_size = sizeof(con_addr);
 
-  while (1) {
+  while (true) {
     clientfd = accept(sockfd, (struct sockaddr*)&con_addr, &struct_size);
-    //log_info("Connection accepted");
+    log_info("Connection accepted");
 
     bytes_read = read(clientfd, buf, 100);
     buf[bytes_read] = '\0';
