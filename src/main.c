@@ -26,10 +26,6 @@ void send_file(int clientfd, char* path) {
     path = "/index.html";
   }
 
-  if (strcmp(path, "/favicon.ico") == 0) {
-    return;
-  }
-
   char* location = "public";
   char full_path[100];
   strcpy(full_path, location);
